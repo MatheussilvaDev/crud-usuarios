@@ -6,6 +6,8 @@ import com.mathdev.usuario.infrastructure.entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class UsuarioMapper {
@@ -31,5 +33,11 @@ public class UsuarioMapper {
                 .enderecos(enderecoMapper.toDtoList(usuario.getEnderecos()))
                 .telefones(telefoneMapper.toDtoList(usuario.getTelefones()))
                 .build();
+    }
+
+    public List<UsuarioDTO> toListDTO(List<Usuario> usuariosDto){
+        return usuariosDto.stream()
+                .map(this::toDTO)
+                .toList();
     }
 }

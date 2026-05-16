@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/usuario")
@@ -26,7 +28,6 @@ public class UsuarioController {
                         userDTO.getSenha())
 
         );
-
         return "Bearer " + jwtUtil.generateToken(authentication.getName());
     }
 
@@ -38,6 +39,16 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<UsuarioDTO> findUserByEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(usuarioService.findByEmail(email));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> findUserById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(usuarioService.findById(id));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UsuarioDTO>> findUserById(){
+        return ResponseEntity.ok(usuarioService.findAll());
     }
 
     @DeleteMapping("/{email}")
