@@ -10,30 +10,54 @@ import java.util.List;
 public class EnderecoMapper {
 
     public List<Endereco> toEntityList(List<EnderecoDTO> enderecoDTO){
-        return enderecoDTO.stream().map(
-                e -> Endereco.builder()
-                        .cep(e.getCep())
-                        .rua(e.getRua())
-                        .cidade(e.getCidade())
-                        .complemento(e.getComplemento())
-                        .estado(e.getEstado())
-                        .bairro(e.getBairro())
-                        .numero(e.getNumero())
-                .build())
+        return enderecoDTO.stream()
+                .map(this::toEntity)
                 .toList();
     }
 
     public List<EnderecoDTO> toDtoList(List<Endereco> enderecos){
-        return enderecos.stream().map(
-                        e -> EnderecoDTO.builder()
-                                .cep(e.getCep())
-                                .rua(e.getRua())
-                                .cidade(e.getCidade())
-                                .complemento(e.getComplemento())
-                                .estado(e.getEstado())
-                                .bairro(e.getBairro())
-                                .numero(e.getNumero())
-                                .build())
+        return enderecos.stream()
+                .map(this::toDTO)
                 .toList();
     }
+
+    public Endereco toEntity(EnderecoDTO dto){
+        return Endereco.builder()
+                .id(dto.getId())
+                .estado(dto.getEstado())
+                .cidade(dto.getCidade())
+                .bairro(dto.getBairro())
+                .cep(dto.getCep())
+                .rua(dto.getRua())
+                .numero(dto.getNumero())
+                .complemento(dto.getComplemento())
+                .build();
+    }
+
+    public EnderecoDTO toDTO(Endereco entity){
+        return EnderecoDTO.builder()
+                .id(entity.getId())
+                .estado(entity.getEstado())
+                .cidade(entity.getCidade())
+                .bairro(entity.getBairro())
+                .cep(entity.getCep())
+                .rua(entity.getRua())
+                .numero(entity.getNumero())
+                .complemento(entity.getComplemento())
+                .build();
+    }
+
+    public Endereco updateEndereco(Endereco entity, EnderecoDTO dto){
+        return Endereco.builder()
+                .id(dto.getId() != null ? dto.getId() : entity.getId())
+                .numero(dto.getNumero() != null ? dto.getNumero() : entity.getNumero())
+                .bairro(dto.getBairro() != null ? dto.getBairro() : entity.getBairro())
+                .estado(dto.getEstado() != null ? dto.getEstado() : entity.getEstado())
+                .complemento(dto.getComplemento() != null ? dto.getComplemento() : entity.getComplemento())
+                .cep(dto.getCep() != null ? dto.getCep() : entity.getCep())
+                .cidade(dto.getCidade() != null ? dto.getCidade() : entity.getCidade())
+                .rua(dto.getRua() != null ? dto.getRua() : entity.getRua())
+                .build();
+    }
+
 }

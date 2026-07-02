@@ -36,6 +36,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.createUser(userDTO));
     }
 
+    @PutMapping
+    public ResponseEntity<UsuarioDTO> updateUser(@RequestBody UsuarioDTO usuarioDTO, @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.updateUser(token, usuarioDTO));
+    }
+
     @GetMapping
     public ResponseEntity<UsuarioDTO> findUserByEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(usuarioService.findByEmail(email));
