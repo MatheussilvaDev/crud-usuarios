@@ -6,6 +6,7 @@ import com.mathdev.usuario.infrastructure.entity.Usuario;
 import com.mathdev.usuario.infrastructure.exception.ConflictException;
 import com.mathdev.usuario.infrastructure.exception.ResourceNotFoundException;
 import com.mathdev.usuario.infrastructure.repository.UsuarioRepository;
+import com.mathdev.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public UsuarioDTO createUser(UsuarioDTO usuarioDTO){
         boolean existsEmail = usuarioRepository.existsByEmail(usuarioDTO.getEmail());
@@ -35,7 +37,6 @@ public class UsuarioService {
     public UsuarioDTO findByEmail(String email){
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("E-mail não encontrado"));
-
         return usuarioMapper.toDTO(usuario);
     }
 
@@ -54,5 +55,19 @@ public class UsuarioService {
 
     public void deleteByEmail(String email){
         usuarioRepository.deleteByEmail(email);
+    }
+
+    public UsuarioDTO updateUser(String token, UsuarioDTO usuarioDTO){
+        String email = jwtUtil.extractUsername(token.substring(7));
+
+        usuarioDTO.setSenha(usuarioDTO.getSenha() != null ? passwordEncoder.encode(usuarioDTO.getSenha()) : null);
+
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("Email não encontrado")
+        );
+
+        Usuario usuarioUpdated = usuarioMapper.updateUser(usuarioDTO, usuario);
+
+        return usuarioMapper.toDTO(usuarioRepository.save(usuarioUpdated));
     }
 }
