@@ -22,6 +22,7 @@ public class TelefoneMapper {
     public List<TelefoneDTO> toDtoList(List<Telefone> telefones){
         return telefones.stream()
                 .map(e -> TelefoneDTO.builder()
+                        .id(e.getId())
                         .ddd(e.getDdd())
                         .numero(e.getNumero())
                         .build())
